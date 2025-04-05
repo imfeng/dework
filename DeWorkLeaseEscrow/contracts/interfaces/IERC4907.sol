@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: CC0-1.0
 
 pragma solidity ^0.8.0;
-struct UserInfo {
-    address user; // address of user role
-    uint64 expires; // unix timestamp, user expires
-}
 
 interface IERC4907 {
     // Logged when the user of a token assigns a new user or updates expires

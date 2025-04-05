@@ -37,14 +37,26 @@ contract DisputeResolution is AccessControl, Pausable {
         _grantRole(ADMIN_ROLE, msg.sender);
     }
 
+    // Helper function to get lease tenant
+    function getLeaseTenant(uint256 tokenId) internal view returns (address) {
+        (,,,,, , , address tenant,,, ) = dework.leases(tokenId);
+        return tenant;
+    }
+
+    // Helper function to get lease landlord
+    function getLeaseLandlord(uint256 tokenId) internal view returns (address) {
+        (,,,,, , address landlord,,,, ) = dework.leases(tokenId);
+        return landlord;
+    }
+
     function createDispute(uint256 tokenId, string memory description) external {
-        require(dework.leases(tokenId).tenant == msg.sender, "Only tenant can create dispute");
+        require(getLeaseTenant(tokenId) == msg.sender, "Only tenant can create dispute");
         require(!disputes[tokenId].resolved, "Dispute already resolved");
 
         Dispute storage dispute = disputes[tokenId];
         dispute.tokenId = tokenId;
         dispute.tenant = msg.sender;
-        dispute.landlord = dework.leases(tokenId).landlord;
+        dispute.landlord = getLeaseLandlord(tokenId);
         dispute.description = description;
         dispute.createdAt = block.timestamp;
         dispute.resolved = false;

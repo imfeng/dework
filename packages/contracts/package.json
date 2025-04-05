@@ -7,6 +7,8 @@
     "compile": "hardhat compile",
     "deploy": "hardhat run scripts/deploy.js",
     "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:hashkey": "hardhat run scripts/deploy-hashkey.js --network hashkeyTestnet",
+    "e2e:hashkey": "hardhat run scripts/e2e.js --network hashkeyTestnet",
     "node": "hardhat node"
   },
   "dependencies": {

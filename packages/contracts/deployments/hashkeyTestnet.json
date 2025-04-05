@@ -1,0 +1,11 @@
+{
+  "network": "hashkeyTestnet",
+  "timestamp": "2025-04-05T19:22:11.788Z",
+  "contracts": {
+    "mockUSDC": "0x5C8207e1370Ef20ff63Fe7cd99d07C66ac2454b2",
+    "dework": "0x8f83d904670A45a55c5C53bCBeA4222cc468CB1c",
+    "interestDistribution": "0x9673451951dcA337bD713749792E23D69be13C9A",
+    "disputeResolution": "0x974C63c0aDdE916E5789E6959782133C924b516a"
+  },
+  "defiProtocol": "0x9577a8022B7cb33E356747f76f427bD2185b0a23"
+}

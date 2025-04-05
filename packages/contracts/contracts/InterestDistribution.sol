@@ -30,6 +30,21 @@ contract InterestDistribution is AccessControl, Pausable {
         _grantRole(ADMIN_ROLE, msg.sender);
     }
 
+    // Helper function to get lease information
+    function getLeaseInfo(uint256 tokenId) internal view returns (
+        uint256 depositAmount,
+        uint256 depositBalance,
+        uint256 startDate,
+        uint256 endDate,
+        uint256 interestEarned,
+        uint8 status,
+        address landlord,
+        address tenant
+    ) {
+        (depositAmount, depositBalance, startDate, endDate, interestEarned, status, landlord, tenant, , , ) = dework.leases(tokenId);
+        return (depositAmount, depositBalance, startDate, endDate, interestEarned, status, landlord, tenant);
+    }
+
     function setDefiProtocol(address _defiProtocol) external onlyRole(ADMIN_ROLE) {
         defiProtocol = _defiProtocol;
     }
@@ -45,19 +60,20 @@ contract InterestDistribution is AccessControl, Pausable {
         require(yieldAmount > 0, "No yield to distribute");
 
         // Get lease information
-        (,,,uint256 startDate, uint256 endDate) = dework.getLeaseInfo(tokenId);
+        (,, , uint256 endDate,,, address landlord,) = getLeaseInfo(tokenId);
         require(block.timestamp >= endDate, "Lease not ended");
 
         // Calculate distribution amounts
         uint256 landlordAmount = (yieldAmount * LANDLORD_RATIO) / 10000;
         uint256 platformAmount = yieldAmount - landlordAmount;
 
-        // Transfer to respective parties
-        usdcToken.transfer(dework.leases(tokenId).landlord, landlordAmount);
-        usdcToken.transfer(address(this), platformAmount);
+        // Transfer to landlord - we already have the tokens in the contract
+        usdcToken.transfer(landlord, landlordAmount);
+        // No need to transfer to ourselves
+        // usdcToken.transfer(address(this), platformAmount);
 
-        // Update lease information
-        dework.leases(tokenId).interestEarned += yieldAmount;
+        // Add interest earned to the lease
+        dework.addInterestEarned(tokenId, yieldAmount);
         leaseYields[tokenId] = 0;
 
         emit YieldDistributed(tokenId, landlordAmount, platformAmount);
