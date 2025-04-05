@@ -1,0 +1,77 @@
+export const deworkABI = [
+  {
+    inputs: [
+      { name: 'tenant', type: 'address' },
+      { name: 'depositAmount', type: 'uint256' },
+      { name: 'duration', type: 'uint256' },
+      { name: 'ensName', type: 'string' },
+      { name: 'worldId', type: 'string' },
+    ],
+    name: 'createLease',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'leaseId', type: 'uint256' }],
+    name: 'deposit',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'leaseId', type: 'uint256' }],
+    name: 'raiseDispute',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'landlord', type: 'address' }],
+    name: 'getLandlordLeases',
+    outputs: [
+      {
+        components: [
+          { name: 'tokenId', type: 'uint256' },
+          { name: 'depositAmount', type: 'uint256' },
+          { name: 'interestEarned', type: 'uint256' },
+          { name: 'status', type: 'uint8' },
+          { name: 'startDate', type: 'uint256' },
+          { name: 'endDate', type: 'uint256' },
+          { name: 'landlord', type: 'address' },
+          { name: 'tenant', type: 'address' },
+          { name: 'ensName', type: 'string' },
+          { name: 'worldId', type: 'string' },
+        ],
+        name: '',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'tenant', type: 'address' }],
+    name: 'getTenantLeases',
+    outputs: [
+      {
+        components: [
+          { name: 'tokenId', type: 'uint256' },
+          { name: 'depositAmount', type: 'uint256' },
+          { name: 'interestEarned', type: 'uint256' },
+          { name: 'status', type: 'uint8' },
+          { name: 'startDate', type: 'uint256' },
+          { name: 'endDate', type: 'uint256' },
+          { name: 'landlord', type: 'address' },
+          { name: 'tenant', type: 'address' },
+          { name: 'ensName', type: 'string' },
+          { name: 'worldId', type: 'string' },
+        ],
+        name: '',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const 

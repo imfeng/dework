@@ -20,7 +20,9 @@
     "dev:contracts": "pnpm contracts node",
     "dev": "pnpm -r --workspace-concurrency=Infinity run --if-present dev",
     "build": "pnpm -r --workspace-concurrency=Infinity run --if-present build",
-    "test:all": "pnpm -r --workspace-concurrency=Infinity run --if-present test"
+    "test:all": "pnpm -r --workspace-concurrency=Infinity run --if-present test",
+    "lint": "pnpm -r --workspace-concurrency=Infinity run --if-present lint",
+    "format": "pnpm -r --workspace-concurrency=Infinity run --if-present format"
   },
   "dependencies": {
     "@openzeppelin/contracts": "4.9.3",
@@ -28,6 +30,8 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "3.0.0",
-    "hardhat": "2.17.0"
+    "hardhat": "2.17.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.0"
   }
 }
