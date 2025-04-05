@@ -14,7 +14,9 @@ module.exports = {
   },
   networks: {
     hardhat: {
-      chainId: 31337
+      chainId: 31337,
+      // Needed for consistency in tests
+      initialBaseFeePerGas: 0
     },
     localhost: {
       url: "http://127.0.0.1:8545",
@@ -43,5 +45,9 @@ module.exports = {
     cache: "./cache",
     artifacts: "./artifacts",
     deployments: "./deployments"
+  },
+  // Force ethers version to be compatible with tests
+  mocha: {
+    timeout: 40000
   }
 };
