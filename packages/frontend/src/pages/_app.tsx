@@ -1,5 +1,6 @@
 'use client'
 
+import { AppProps } from 'next/app'
 import { WagmiConfig } from 'wagmi'
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import { AuthProvider } from '@/contexts/AuthContext'
@@ -10,7 +11,7 @@ import { config, chains } from '@/config/wagmi'
 import '@rainbow-me/rainbowkit/styles.css'
 import '@/styles/globals.css'
 
-export default function App({ Component, pageProps }: any) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig config={config}>
       <RainbowKitProvider chains={chains}>

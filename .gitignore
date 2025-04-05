@@ -47,27 +47,27 @@ flattenedContracts/
 Thumbs.db
 
 # 前端構建
-frontend/build/
-frontend/dist/
-frontend/.env
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/coverage/
-frontend/.next/
+packages/frontend/build/
+packages/frontend/dist/
+packages/frontend/.env
+packages/frontend/.env.local
+packages/frontend/.env.development.local
+packages/frontend/.env.test.local
+packages/frontend/.env.production.local
+packages/frontend/npm-debug.log*
+packages/frontend/yarn-debug.log*
+packages/frontend/yarn-error.log*
+packages/frontend/coverage/
+packages/frontend/.next/
 
 # 後端
-backend/__pycache__/
-backend/*.py[cod]
-backend/*$py.class
-backend/logs/
-backend/data/
-backend/.coverage
-backend/coverage/
+packages/backend/__pycache__/
+packages/backend/*.py[cod]
+packages/backend/*$py.class
+packages/backend/logs/
+packages/backend/data/
+packages/backend/.coverage
+packages/backend/coverage/
 
 # 日誌
 logs/
