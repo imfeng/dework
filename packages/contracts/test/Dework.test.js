@@ -156,4 +156,111 @@ describe("Dework", function () {
       expect(lease.status).to.equal(2); // Completed
     });
   });
+
+  describe("Property Management", function () {
+    it("should allow landlord to create property", async function () {
+      await dework.connect(landlord).createProperty(
+        "Test Property",
+        "Test Location",
+        ethers.utils.parseUnits("1000", 6), // 1000 USDC
+        ethers.utils.parseUnits("2000", 6)  // 2000 USDC
+      );
+
+      const properties = await dework.getAllProperties();
+      expect(properties.length).to.equal(1);
+      expect(properties[0].name).to.equal("Test Property");
+      expect(properties[0].landlord).to.equal(landlord.address);
+    });
+
+    it("should not allow non-landlord to create property", async function () {
+      await expect(
+        dework.connect(tenant).createProperty(
+          "Test Property",
+          "Test Location",
+          ethers.utils.parseUnits("1000", 6),
+          ethers.utils.parseUnits("2000", 6)
+        )
+      ).to.be.revertedWith("Caller is not a landlord");
+    });
+  });
+
+  describe("Lease Management", function () {
+    let propertyId;
+
+    beforeEach(async function () {
+      await dework.connect(landlord).createProperty(
+        "Test Property",
+        "Test Location",
+        ethers.utils.parseUnits("1000", 6),
+        ethers.utils.parseUnits("2000", 6)
+      );
+      propertyId = 0;
+    });
+
+    it("should allow tenant to rent property", async function () {
+      // Approve USDC spending
+      await usdc.connect(tenant).approve(
+        dework.address,
+        ethers.utils.parseUnits("3000", 6)
+      );
+
+      // Rent property
+      await dework.connect(tenant).rentProperty(propertyId, 12); // 12 months
+
+      const nft = await dework.getPropertyNFT(propertyId);
+      expect(nft.tenant).to.equal(tenant.address);
+    });
+
+    it("should not allow renting without sufficient USDC", async function () {
+      await expect(
+        dework.connect(tenant).rentProperty(propertyId, 12)
+      ).to.be.revertedWith("Insufficient USDC balance");
+    });
+  });
+
+  describe("Deposit Management", function () {
+    let propertyId;
+
+    beforeEach(async function () {
+      await dework.connect(landlord).createProperty(
+        "Test Property",
+        "Test Location",
+        ethers.utils.parseUnits("1000", 6),
+        ethers.utils.parseUnits("2000", 6)
+      );
+      propertyId = 0;
+
+      // Approve and rent
+      await usdc.connect(tenant).approve(
+        dework.address,
+        ethers.utils.parseUnits("3000", 6)
+      );
+      await dework.connect(tenant).rentProperty(propertyId, 12);
+    });
+
+    it("should allow tenant to request deposit return", async function () {
+      await dework.connect(tenant).requestDepositReturn(propertyId);
+      const deposits = await dework.getTenantDeposits();
+      expect(deposits[0].status).to.equal("PENDING_RETURN");
+    });
+
+    it("should not allow non-tenant to request deposit return", async function () {
+      await expect(
+        dework.connect(landlord).requestDepositReturn(propertyId)
+      ).to.be.revertedWith("Caller is not the tenant");
+    });
+  });
+
+  describe("Role Management", function () {
+    it("should allow admin to grant roles", async function () {
+      await dework.grantRole(await dework.LANDLORD_ROLE(), tenant.address);
+      expect(await dework.hasRole(await dework.LANDLORD_ROLE(), tenant.address)).to.be.true;
+    });
+
+    it("should not allow non-admin to grant roles", async function () {
+      await expect(
+        dework.connect(landlord).grantRole(await dework.LANDLORD_ROLE(), tenant.address)
+      ).to.be.revertedWith("Caller is not an admin");
+    });
+  });
 }); 

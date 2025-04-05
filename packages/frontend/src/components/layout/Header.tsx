@@ -3,16 +3,21 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useRole } from '@/contexts/RoleContext'
+import { useState } from 'react'
 
 const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Tenant', href: '/tenant' },
-  { name: 'Landlord', href: '/landlord' },
-  { name: 'Admin', href: '/admin' },
+  { name: '首頁', href: '/' },
+  { name: '儀表板', href: '/dashboard' },
+  { name: '市場', href: '/marketplace' },
+  { name: '房東', href: '/landlord' },
+  { name: '租客', href: '/tenant' },
 ]
 
 export function Header() {
   const pathname = usePathname()
+  const { activeRole, setActiveRole } = useRole()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <header className="bg-white shadow">
@@ -38,11 +43,36 @@ export function Header() {
               ))}
             </div>
           </div>
-          <div className="ml-10 space-x-4">
+          <div className="ml-10 space-x-4 flex items-center">
+            <div className="mr-2">
+              <button
+                onClick={() => setActiveRole(activeRole === 'landlord' ? 'tenant' : 'landlord')}
+                className="bg-indigo-100 px-3 py-2 rounded-md text-sm text-indigo-800 font-medium"
+              >
+                {activeRole === 'landlord' ? '切換到租客視圖' : '切換到房東視圖'}
+              </button>
+            </div>
             <ConnectButton />
           </div>
+        </div>
+        
+        {/* 移動端導航 */}
+        <div className="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
+          {navigation.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className={`text-base font-medium ${
+                pathname === link.href
+                  ? 'text-indigo-600'
+                  : 'text-gray-500 hover:text-indigo-500'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
         </div>
       </nav>
     </header>
   )
-} 
+}

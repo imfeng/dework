@@ -1,6 +1,11 @@
 import { Header } from '@/components/layout/Header'
 import { LeaseManagement } from '@/components/landlord/LeaseManagement'
 
+export const metadata = {
+  title: '房東儀表板 | DeWork',
+  description: '管理您的租賃物件和收益',
+}
+
 export default function LandlordPage() {
   return (
     <div className="min-h-screen bg-gray-100">
@@ -14,4 +19,4 @@ export default function LandlordPage() {
       </main>
     </div>
   )
-} 
+}

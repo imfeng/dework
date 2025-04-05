@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { formatAddress, getNetworkName } from '../utils/helpers';
 import useWeb3 from '../hooks/useWeb3';
 
 const Header = () => {
-  const location = useLocation();
+  const router = useRouter();
   const { isConnected, address, connectWallet, disconnectWallet, chain } = useWeb3();
   const [menuOpen, setMenuOpen] = useState(false);
   
@@ -13,15 +14,16 @@ const Header = () => {
     { name: '首頁', path: '/' },
     { name: '儀表板', path: '/dashboard' },
     { name: '創建租賃', path: '/create-rental' },
-    { name: '如何使用', path: '/how-it-works' }
+    { name: '如何使用', path: '/how-it-works' },
+    { name: '市場', path: '/marketplace' }
   ];
   
   // 檢查鏈接是否活躍
   const isActive = (path) => {
     if (path === '/') {
-      return location.pathname === '/';
+      return router.pathname === '/';
     }
-    return location.pathname.startsWith(path);
+    return router.pathname.startsWith(path);
   };
   
   // 切換菜單
@@ -39,7 +41,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <span className="text-2xl font-bold text-blue-600">DeWork</span>
           </Link>
           
@@ -48,7 +50,7 @@ const Header = () => {
             {navLinks.map((link) => (
               <Link
                 key={link.path}
-                to={link.path}
+                href={link.path}
                 className={`text-sm font-medium ${
                   isActive(link.path)
                     ? 'text-blue-600'
@@ -79,14 +81,26 @@ const Header = () => {
                   {/* 下拉菜單 */}
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
                     <Link
-                      to="/dashboard"
+                      href="/dashboard"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       儀表板
                     </Link>
+                    <Link
+                      href="/landlord"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      我是房東
+                    </Link>
+                    <Link
+                      href="/tenant"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      我是租客
+                    </Link>
                     <button
                       onClick={disconnectWallet}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       斷開連接
                     </button>
@@ -96,7 +110,7 @@ const Header = () => {
             ) : (
               <button
                 onClick={connectWallet}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg text-sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
               >
                 連接錢包
               </button>
@@ -104,84 +118,111 @@ const Header = () => {
           </div>
           
           {/* 移動端菜單按鈕 */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+          <button
+            className="md:hidden text-gray-600"
+            onClick={toggleMenu}
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg viewBox="0 0 24 24" className="h-6 w-6 fill-current">
-                {menuOpen ? (
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"
-                  />
-                ) : (
-                  <path
-                    fillRule="evenodd"
-                    d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
+              {menuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
         </div>
-      </div>
-      
-      {/* 移動端導航 */}
-      {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="container mx-auto px-4 py-3">
-            <nav className="flex flex-col space-y-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`py-2 px-3 rounded-md ${
-                    isActive(link.path)
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                  onClick={closeMenu}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              
-              {/* 移動端錢包連接 */}
-              {isConnected ? (
-                <>
-                  <div className="py-2 px-3">
-                    <div className="flex items-center">
-                      {chain && (
-                        <span className="text-xs bg-gray-100 py-1 px-2 rounded mr-2">
-                          {getNetworkName(chain.id)}
-                        </span>
-                      )}
-                      <span className="text-sm font-medium">
-                        {formatAddress(address)}
-                      </span>
-                    </div>
-                  </div>
+        
+        {/* 移動端導航菜單 */}
+        {menuOpen && (
+          <nav className="md:hidden py-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`block py-2 text-sm font-medium ${
+                  isActive(link.path)
+                    ? 'text-blue-600'
+                    : 'text-gray-700 hover:text-blue-600'
+                }`}
+                onClick={closeMenu}
+              >
+                {link.name}
+              </Link>
+            ))}
+            {isConnected ? (
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="flex items-center space-x-2">
+                  {chain && (
+                    <span className="text-xs bg-gray-100 py-1 px-2 rounded">
+                      {getNetworkName(chain.id)}
+                    </span>
+                  )}
+                  <span className="text-sm font-medium text-gray-700">
+                    {formatAddress(address)}
+                  </span>
+                </div>
+                <div className="mt-2 space-y-2">
+                  <Link
+                    href="/dashboard"
+                    className="block py-2 text-sm text-gray-700 hover:text-blue-600"
+                    onClick={closeMenu}
+                  >
+                    儀表板
+                  </Link>
+                  <Link
+                    href="/landlord"
+                    className="block py-2 text-sm text-gray-700 hover:text-blue-600"
+                    onClick={closeMenu}
+                  >
+                    我是房東
+                  </Link>
+                  <Link
+                    href="/tenant"
+                    className="block py-2 text-sm text-gray-700 hover:text-blue-600"
+                    onClick={closeMenu}
+                  >
+                    我是租客
+                  </Link>
                   <button
-                    onClick={disconnectWallet}
-                    className="py-2 px-3 text-left text-red-600 hover:bg-gray-50 rounded-md"
+                    onClick={() => {
+                      disconnectWallet();
+                      closeMenu();
+                    }}
+                    className="block w-full text-left py-2 text-sm text-gray-700 hover:text-blue-600"
                   >
                     斷開連接
                   </button>
-                </>
-              ) : (
-                <button
-                  onClick={connectWallet}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-md text-sm w-full"
-                >
-                  連接錢包
-                </button>
-              )}
-            </nav>
-          </div>
-        </div>
-      )}
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  connectWallet();
+                  closeMenu();
+                }}
+                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+              >
+                連接錢包
+              </button>
+            )}
+          </nav>
+        )}
+      </div>
     </header>
   );
 };

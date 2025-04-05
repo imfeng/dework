@@ -1,13 +1,12 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import './globals.css'
-import { Inter } from 'next/font/google'
 import { Providers } from './providers'
-
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'Dework - Web3押金代管平台',
-  description: 'Web3押金代管平台',
-}
+import { useRouter } from 'next/navigation'
+import { RoleProvider } from '@/contexts/RoleContext'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { KycProvider } from '@/contexts/KycContext'
 
 export default function RootLayout({
   children,
@@ -15,12 +14,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="zh-TW">
+      <body>
         <Providers>
-          {children}
+          <AuthProvider>
+            <KycProvider>
+              <RoleProvider>
+                <main>{children}</main>
+              </RoleProvider>
+            </KycProvider>
+          </AuthProvider>
         </Providers>
       </body>
     </html>
   )
-} 
+}
