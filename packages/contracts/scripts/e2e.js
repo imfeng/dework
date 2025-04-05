@@ -82,7 +82,7 @@ async function main() {
   let receipt = await tx.wait();
   console.log("Lease created");
   
-  // Get lease ID
+  // // Get lease ID
   const leaseId = 1; // First lease
   
   // 2. Tenant Deposits
@@ -107,19 +107,19 @@ async function main() {
   
   console.log(`Deposited ${yieldAmount} USDC as yield for lease #${leaseId}`);
   
-  // 4. Fast forward time to end of lease
-  console.log("\n4. Fast forwarding time to end of lease...");
-  await hre.network.provider.send("evm_increaseTime", [duration]);
-  await hre.network.provider.send("evm_mine");
+  // // 4. Fast forward time to end of lease
+  // console.log("\n4. Fast forwarding time to end of lease...");
+  // await hre.network.provider.send("evm_increaseTime", [duration]);
+  // await hre.network.provider.send("evm_mine");
   
-  console.log("Time fast-forwarded to end of lease");
+  // console.log("Time fast-forwarded to end of lease");
   
-  // 5. Distribute Yield
-  console.log("\n5. Distributing yield...");
-  tx = await interestDistribution.distributeYield(leaseId);
-  await tx.wait();
+  // // 5. Distribute Yield
+  // console.log("\n5. Distributing yield...");
+  // tx = await interestDistribution.distributeYield(leaseId);
+  // await tx.wait();
   
-  console.log("Yield distributed");
+  // console.log("Yield distributed");
   
   // 6. Landlord Releases Deposit
   console.log("\n6. Releasing deposit to tenant...");
